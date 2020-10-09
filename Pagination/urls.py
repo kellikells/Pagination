@@ -1,0 +1,10 @@
+
+from django.conf.urls import url, include
+
+
+urlpatterns = [
+
+    url(r'^pagination/', include('apps.pagination_app.urls')),
+
+    
+]

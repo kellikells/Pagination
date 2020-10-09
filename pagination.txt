@@ -1,0 +1,56 @@
+>>> Lead.objects.values('page_num')
+
+<QuerySet [{'page_num': 1}, {'page_num': 1}, {'page_num': 2}, {'page_num': 2}, {'page_num': 2}, {'page_num': 3}, {'page_num': 3}, {'page_num': 3}]>
+-------------------------------------------
+>>> Lead.objects.values('page_num').distinct().order_by("page_num")
+
+<QuerySet [{'page_num': 1}, {'page_num': 2}, {'page_num': 3}]>
+>>>
+
+-------------------------------------------
+
+
+<form id='ajaxForm' action="/users/info" method='POST'>
+  <input type='text' name='name'>
+  Date From: <input type='text' name='date_from'>
+  Date To: <input type='text' name='date_to'>
+  <input type='hidden' name='page_number' value='1'>
+  <input type='submit' value='Submit' />
+</form>
+<div id='placeholder'></div>
+...
+   
+<script>
+function submitAjaxForm() {
+  $.ajax({
+    method: "POST",
+    url: $('#ajaxForm').attr('action'),
+    data: $('#ajaxForm).serialize(),
+    success: function(resp){
+       $('#placeholder').html(resp);
+    }
+  });
+}
+   
+$('input[name=name]').keyup(function() {
+   submitAjaxForm(); 
+});
+$('input[name=date_from], input[name=date_to').keyup(function() {
+   submitAjaxForm(); 
+});
+</script>
+-------------------------------------------
+
+$('a').click(function() {
+  $('input[name=page_number]').val( $(this).attr('data-value') );
+  submitAjaxForm();
+  return false;  //do this so that it actually doesn't go to that link
+}
+
+-------------------------------------------
+
+
+-------------------------------------------
+
+
+-------------------------------------------
