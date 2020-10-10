@@ -4,6 +4,10 @@ from . import views
 urlpatterns = [
     url(r'^$', views.index),
 
+    url(r'^leads/info/$', views.leads_info),
+
+    
+
     # url(r'^on_load/$', views.on_load),
 
     # url(r'^leads_by_name/$', views.leads_by_name),

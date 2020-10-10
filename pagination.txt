@@ -52,5 +52,36 @@ $('a').click(function() {
 
 -------------------------------------------
 
+date_1 = datetime.strptime(input_1, '%d/%m/%Y')
+date_2 = datetime.strptime(input_2, '%d/%m/%Y')
+date_3 = date(2017, 7, 19)
 
+date_1 < date_3 < date_2
+(will return a Boolean)
 -------------------------------------------
+
+from datetime import datetime
+
+date_format = "%m/%d/%Y"
+
+a = datetime.strptime('8/18/2008', date_format)
+
+b = datetime.strptime('9/26/2007', date_format) # Date to be checked
+
+c = datetime.strptime('9/25/2008', date_format)
+
+d = datetime.strptime('8/18/2008', date_format)  #Date entered here should always be the same as 'a'
+
+delta1 = b - a
+
+delta2 = c - b
+
+delta3 = d - a
+
+if delta1.days >= delta3.days and delta2.days >= delta3.days:
+
+    print 'In between'
+
+else:
+
+    print 'Not in between'

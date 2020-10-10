@@ -9,6 +9,7 @@ from .models import *
 
 from django.core import serializers
 from django.core.paginator import Paginator
+from datetime import datetime
 
 # ==========================================
 def index(request):
@@ -16,7 +17,22 @@ def index(request):
     return render(request, 'pagination_app/index.html')
 # ---------------------------------------------
 
+def leads_info(request):
+    leads = Lead.objects.all()
 
+
+    # if they entered in the date areas
+    if request.POST['date_from']:
+
+        # creating strings in specific format
+        # date_from = datetime.datetime.strptime(request.POST['date_from'], '%m/%d/%Y')
+
+        print('-'*30)
+        # print(date_from)
+
+
+
+    return render(request, "pagination_app/table.html", {"leads": leads})
 
 
 # ---------------------------------------------

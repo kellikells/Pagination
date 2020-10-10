@@ -58,7 +58,7 @@
                     <div class='col-5'>
 
 
-                        <input type='text' name='start_date' id='date_from'>
+                        <input type='text' name='date_from' id='date_from'>
                         <!-- </form> -->
 
                     </div>
@@ -68,7 +68,7 @@
                     </div>
                     <div class='col-5'>
 
-                        <input type='text' name='date_to'>
+                        <input type='text' name='date_to' id='date_to'>
 
 
                     </div>
@@ -78,16 +78,12 @@
         <div class='row justify-content-end' style='padding: 20px 50px 0 10px; display:flex; justify-content: end;'>
 
             <div class="row" id='page_num_placeholder'></div>
+
             <input type='hidden' name='page_number' value='1'>
-            <input type='submit' value='Submit'>
+            <a href="#" data-value='1'>Page 1</a> <a href="#" data-value='1'>Page 2</a>
 
         </div>
     </form>
-
-
-
-
-
 
 
     <div class='container'>
@@ -103,7 +99,7 @@
             </thead>
             <tbody>
 
-                <div id="table_placeholder"></div>
+                <!-- <div id="table_placeholder"></div> -->
 
             </tbody>
         </table>
@@ -113,6 +109,13 @@
 
     <script>
         function submitAjaxform() {
+
+            console.log('submitAjaxform()')
+            console.log('data')
+            console.log($('#paginationForm').serialize())
+            console.log($('#paginationForm'))
+
+
             $.ajax({
                 method: 'post',
                 url: $('#paginationForm').attr('action'),
@@ -123,27 +126,37 @@
             });
         }
 
+        function delay(callback, ms) {
+            var timer = 0;
+            return function () {
+                var context = this, args = arguments;
+                clearTimeout(timer);
+                timer = setTimeout(function () {
+                    callback.apply(context, args);
+                }, ms || 0);
+            };
+        }
+
+        // $('#input').keyup(delay(function (e) {
+        //     console.log('Time elapsed!', this.value);
+        // }, 500));
+
+        // name input
         $('input[name=name]').keyup(function () {
-
-
-            console.log('name keyup works')
-            console.log('data:')
-            console.log($('#paginationForm').serialize())
-
             submitAjaxform();
         });
 
-        $('input[name=date_from], input[name=date_to]').keyup(function () {
+        // dates input
+        $('input[name=date_from], input[name=date_to]').keyup(delay(function (e) {
 
-            console.log('date keyup works')
-            console.log('data:')
-            console.log($('#paginationForm').serialize())
-            
+            submitAjaxform();
+        }, 1500));
+
+        // page input
+        $('input[name=page_number]').click(function () {
 
             submitAjaxform();
         })
-
-
 
     </script>
 
