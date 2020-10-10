@@ -21,8 +21,10 @@ def index(request):
 # ---------------------------------------------
 
 def leads_info(request):
-    leads = Lead.objects.all()
+    if request.POST['name']:
+        leads = Lead.objects.filter(first_name__startswith=request.POST['name'])
 
+        return render(request, "pagination_app/table.html", {"leads": leads})
 
     # if they entered in the date areas
     if request.POST['date_from']:
@@ -68,10 +70,8 @@ def leads_info(request):
         # else: 
         #     print('not between')
       
-
-
-
-    return render(request, "pagination_app/table.html", {"leads": leads})
+        return render(request, "pagination_app/table.html", {"leads": leads})
+    
 
 
 # ---------------------------------------------
