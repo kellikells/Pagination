@@ -9,8 +9,11 @@ from .models import *
 
 from django.core import serializers
 from django.core.paginator import Paginator
-from datetime import datetime
 
+from datetime import datetime
+from datetimerange import DateTimeRange
+import datetime as otherdatetime
+import pytz
 # ==========================================
 def index(request):
 
@@ -23,12 +26,48 @@ def leads_info(request):
 
     # if they entered in the date areas
     if request.POST['date_from']:
+    
+        all_leads = Lead.objects.all()
 
         # creating strings in specific format
-        # date_from = datetime.datetime.strptime(request.POST['date_from'], '%m/%d/%Y')
+        date_from = datetime.strptime(request.POST['date_from'], '%m/%d/%Y')
+        date_to = datetime.strptime(request.POST['date_to'], '%m/%d/%Y')
 
-        print('-'*30)
-        # print(date_from)
+        utc=pytz.UTC
+        utc_date_from = date_from.replace(tzinfo=utc)
+        utc_date_to = date_to.replace(tzinfo=utc)
+ 
+        # using Python DateTimeRange library
+        time_range = DateTimeRange(utc_date_from, utc_date_to)
+
+        a = Lead.objects.first()
+        b = a.created_at
+
+        # print('-'*30)
+        # print(utc_date_from)
+        # print(utc_date_to)
+        # print('first_entry_leads created_at')
+        # print(b)
+        # print(b in time_range)
+        leads = []
+        for lead in all_leads:
+            
+            if lead.created_at in time_range:
+                leads.append(lead)
+                print('*'*30)
+                print(leads)
+        # for value in time_range.range(otherdatetime.timedelta(days=1)):
+        #     for lead in leads:
+        #         if lead.created_at in time_range.range:
+        #             print('-'*30)
+        #             print("match")
+
+        # if date_from < a_time < date_to:
+        #     print('date between')
+        
+        # else: 
+        #     print('not between')
+      
 
 
 
