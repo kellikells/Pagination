@@ -1,3 +1,8 @@
+use Paginator
+use DateTimeRange
+understanding how to set timezone utf
+
+
 >>> Lead.objects.values('page_num')
 
 <QuerySet [{'page_num': 1}, {'page_num': 1}, {'page_num': 2}, {'page_num': 2}, {'page_num': 2}, {'page_num': 3}, {'page_num': 3}, {'page_num': 3}]>
@@ -113,3 +118,32 @@ print(time_range_smaller in time_range)
 -----------------------------
 start_time = challenge.datetime_start.replace(tzinfo=utc)
 end_time = challenge.datetime_end.replace(tzinfo=utc)
+
+-----------------------------------
+             {% if leads.has_other_pages %}
+                <ul class="pagination">
+                    {% if leads.has_previous %}
+                    <li><a href="?page={{ leads.previous_page_number }}">&laquo;</a></li>
+                    {% else %}
+                    <li class="disabled"><span>&laquo;</span></li>
+                    {% endif %}
+                    {% for i in leads.paginator.page_range %}
+                    {% if leads.number == i %}
+                    <li class="active"><span>{{ i }} <span class="sr-only">(current)</span></span></li>
+                    {% else %}
+
+                    <li><a href="?page={{ i }}">{{ i }}
+
+                        <!-- using hidden input with value of page number to submit to submitAjaxForm() -->
+                        <input type="hidden" name="page_number" data-value="{{i}}">
+                    </a></li>
+
+                    {% endif %}
+                    {% endfor %}
+                    {% if leads.has_next %}
+                    <li><a href="?page={{ leads.next_page_number }}">&raquo;</a></li>
+                    {% else %}
+                    <li class="disabled"><span>&raquo;</span></li>
+                    {% endif %}
+                </ul>
+                {% endif %}

@@ -9,29 +9,24 @@
     <!-- Bootstrap CSS -->
     <link rel='stylesheet' href='https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css'
         integrity='sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh' crossorigin='anonymous'>
-
     <!-- Link to jQuery  -->
     <script src='https://cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js'></script>
 
-    <!-- <script>
+    <script>
         $(document).ready(function () {
             console.log('document ready')
 
             $.ajax({
-                url: '/ajax_pagination/on_load/',
+                url: '/pagination/on_load/',
                 success: function (serverResponse) {
-                    $('#page_num_placeholder').html(serverResponse)
+                    $('#table_placeholder').html(serverResponse)
                 }
             });
-
         })
-
-    </script> -->
+    </script>
 </head>
 
 <body>
-
-
 
     <form action='/pagination/leads/info/' method='post' id='paginationForm'>
         {% csrf_token %}
@@ -45,11 +40,10 @@
                     <div class='col-8'>
 
                         <input type='text' name='name'>
-                        <!-- </form> -->
+                 
                     </div>
                 </div>
             </div>
-
             <div class='col'>
                 <div class='row'>
                     <div class='col-1'>
@@ -57,12 +51,9 @@
                     </div>
                     <div class='col-5'>
 
-
                         <input type='text' name='date_from' id='date_from'>
-                        <!-- </form> -->
 
                     </div>
-
                     <div class='col-1'>
                         <label for='end_date'>Date To:</label>
                     </div>
@@ -70,21 +61,43 @@
 
                         <input type='text' name='date_to' id='date_to'>
 
-
                     </div>
                 </div>
             </div>
         </div>
         <div class='row justify-content-end' style='padding: 20px 50px 0 10px; display:flex; justify-content: end;'>
 
-            <div class="row" id='page_num_placeholder'></div>
-
+            <div class="row" id='page_num_placeholder'>
+                <!-- 
             <input type='hidden' name='page_number' value='1'>
-            <a href="#" data-value='1'>Page 1</a> <a href="#" data-value='1'>Page 2</a>
+            <a href="#" data-value='1'>Page 1</a> <a href="#" data-value='1'>Page 2</a> -->
+                {% if leads.has_other_pages %}
+                <ul class="pagination">
+             
+                    {% for i in leads.paginator.page_range %}
+                    {% if leads.number == i %}
+                    <li class="active"><span>{{ i }} <span class="sr-only">(current)</span></span></li>
+                    {% else %}
 
+                    <li><a href="?page={{ i }}">{{ i }}
+
+                        <!-- using hidden input with value of page number to submit to submitAjaxForm() -->
+                        <input type="hidden" name="page_number" data-value="{{i}}">
+                    </a></li>
+
+                    {% endif %}
+                    {% endfor %}
+                   
+                </ul>
+                {% endif %}
+
+
+
+
+
+            </div>
         </div>
     </form>
-
 
     <div class='container'>
         <table class='table table-striped table-bordered' id='table_placeholder'>
@@ -98,14 +111,9 @@
                 </tr>
             </thead>
             <tbody>
-
-                <!-- <div id="table_placeholder"></div> -->
-
             </tbody>
         </table>
-
     </div>
-
 
     <script>
         function submitAjaxform() {
@@ -114,7 +122,6 @@
             console.log('data')
             console.log($('#paginationForm').serialize())
             console.log($('#paginationForm'))
-
 
             $.ajax({
                 method: 'post',
@@ -126,6 +133,7 @@
             });
         }
 
+        // timer for dateinput delay 
         function delay(callback, ms) {
             var timer = 0;
             return function () {
@@ -137,10 +145,6 @@
             };
         }
 
-        // $('#input').keyup(delay(function (e) {
-        //     console.log('Time elapsed!', this.value);
-        // }, 500));
-
         // name input
         $('input[name=name]').keyup(function () {
             submitAjaxform();
@@ -148,14 +152,15 @@
 
         // dates input
         $('input[name=date_from], input[name=date_to]').keyup(delay(function (e) {
-
             submitAjaxform();
         }, 1500));
 
         // page input
-        $('input[name=page_number]').click(function () {
+        $('a').click(function () {
 
-            submitAjaxform();
+            console.log($('input[name=page_number]').val($(this).attr('data-value')))
+            // submitAjaxform();
+            return false; // prevent it from going to link
         })
 
     </script>

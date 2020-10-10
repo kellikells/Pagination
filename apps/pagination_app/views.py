@@ -8,7 +8,7 @@ from django.contrib import messages # flash messages
 from .models import *
 
 from django.core import serializers
-from django.core.paginator import Paginator
+from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 
 from datetime import datetime
 from datetimerange import DateTimeRange
@@ -17,8 +17,35 @@ import pytz
 # ==========================================
 def index(request):
 
-    return render(request, 'pagination_app/index.html')
+    leads_list = Lead.objects.all()
+    page = request.GET.get('page', 1)
+
+    paginator = Paginator(leads_list,3)
+    leads=paginator.page(1)
+
+    try:
+        leads = paginator.page(page)
+    except PageNotAnInteger:
+        leads = paginator.page(1)
+    except EmptyPage:
+        leads = paginator.page(paginator.num_pages)
+
+    return render(request, 'pagination_app/index.html', {'leads':leads})
 # ---------------------------------------------
+# ---------------------------------------------
+# get the first page using pagination
+def on_load(request):
+
+    leads_list = Lead.objects.all()
+    page = request.GET.get('page', 1)
+
+    paginator = Paginator(leads_list,3)
+    leads=paginator.page(1)
+
+    return render(request, 'pagination_app/table.html', {'leads': leads })
+
+# ---------------------------------------------
+
 
 def leads_info(request):
     if request.POST['name']:
@@ -74,21 +101,6 @@ def leads_info(request):
     
 
 
-# ---------------------------------------------
-# def leads_info(request):
-#     all_leads = Lead.objects.all()
-#     pages = Paginator(all_leads, 2)
-#     leads_by_page = pages.page(1)
-
-#     return render(request, "ajax_pagination/table.html", {"leads": all_leads})
-
-# ---------------------------------------------
-# def on_load(request):
-
-#     # getting page numbers for form
-#     page_nums = Lead.objects.values('page_num').distinct().order_by("page_num")
-
-#     return render(request, 'ajax_pagination/page_number.html', {'page_nums': page_nums})
 
 # ---------------------------------------------
 
