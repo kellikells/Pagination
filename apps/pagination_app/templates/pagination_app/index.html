@@ -14,8 +14,6 @@
 
     <script>
         $(document).ready(function () {
-            console.log('document ready')
-
             $.ajax({
                 url: '/pagination/on_load/',
                 success: function (serverResponse) {
@@ -40,7 +38,7 @@
                     <div class='col-8'>
 
                         <input type='text' name='name'>
-                 
+
                     </div>
                 </div>
             </div>
@@ -73,26 +71,23 @@
             <a href="#" data-value='1'>Page 1</a> <a href="#" data-value='1'>Page 2</a> -->
                 {% if leads.has_other_pages %}
                 <ul class="pagination">
-             
+
                     {% for i in leads.paginator.page_range %}
                     {% if leads.number == i %}
                     <li class="active"><span>{{ i }} <span class="sr-only">(current)</span></span></li>
                     {% else %}
 
-                    <li><a href="?page={{ i }}">{{ i }}
+                    <li><a class="the_pages" href="?page={{ i }}">{{ i }}
 
-                        <!-- using hidden input with value of page number to submit to submitAjaxForm() -->
-                        <input type="hidden" name="page_number" data-value="{{i}}">
-                    </a></li>
+                            <!-- using hidden input with value of page number to submit to submitAjaxForm() -->
+                            <input type="hidden" name="page_number" value="{{i}}">
+                        </a></li>
 
                     {% endif %}
                     {% endfor %}
-                   
+
                 </ul>
                 {% endif %}
-
-
-
 
 
             </div>
@@ -116,13 +111,8 @@
     </div>
 
     <script>
+
         function submitAjaxform() {
-
-            console.log('submitAjaxform()')
-            console.log('data')
-            console.log($('#paginationForm').serialize())
-            console.log($('#paginationForm'))
-
             $.ajax({
                 method: 'post',
                 url: $('#paginationForm').attr('action'),
@@ -155,12 +145,50 @@
             submitAjaxform();
         }, 1500));
 
-        // page input
-        $('a').click(function () {
 
-            console.log($('input[name=page_number]').val($(this).attr('data-value')))
-            // submitAjaxform();
-            return false; // prevent it from going to link
+
+
+        function getresult() {
+            $.ajax({
+                method: 'get',
+                url: '/pagination/leads_list/',
+                data: $('#paginationForm').val(),
+                success: function (data) {
+                    $('#table_placeholder').html(data)
+                }
+            })
+        }
+        // $(document).ready(function () {
+        //     $.ajax({
+        //         url: '/pagination/on_load/',
+        //         success: function (serverResponse) {
+        //             $('#table_placeholder').html(serverResponse)
+        //         }
+        //     });
+        // })
+        // page input
+        $('.the_pages').click(function (e) {
+            e.preventDefault() // prevent it from going to link
+
+
+            // get only number from the href 
+            var matches = ($(this).attr('href')).match(/(\d+)/);
+
+            pNum = matches[0]
+
+
+            console.log('page-num clicked')
+            console.log(pNum)
+
+            $.ajax({
+                method: 'get',
+                url: '/pagination/leads_list/' + pNum + '/',
+                data: $('#paginationForm').val(),
+                success: function (data) {
+                    $('#table_placeholder').html(data)
+                }
+            })
+
         })
 
     </script>

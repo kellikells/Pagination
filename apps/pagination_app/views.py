@@ -14,6 +14,8 @@ from datetime import datetime
 from datetimerange import DateTimeRange
 import datetime as otherdatetime
 import pytz
+
+import re
 # ==========================================
 def index(request):
 
@@ -46,8 +48,9 @@ def on_load(request):
 
 # ---------------------------------------------
 
-
 def leads_info(request):
+
+    # getting leads by input of name 
     if request.POST['name']:
         leads = Lead.objects.filter(first_name__startswith=request.POST['name'])
 
@@ -72,70 +75,26 @@ def leads_info(request):
         a = Lead.objects.first()
         b = a.created_at
 
-        # print('-'*30)
-        # print(utc_date_from)
-        # print(utc_date_to)
-        # print('first_entry_leads created_at')
-        # print(b)
-        # print(b in time_range)
         leads = []
         for lead in all_leads:
             
             if lead.created_at in time_range:
                 leads.append(lead)
-                print('*'*30)
-                print(leads)
-        # for value in time_range.range(otherdatetime.timedelta(days=1)):
-        #     for lead in leads:
-        #         if lead.created_at in time_range.range:
-        #             print('-'*30)
-        #             print("match")
-
-        # if date_from < a_time < date_to:
-        #     print('date between')
-        
-        # else: 
-        #     print('not between')
-      
+          
         return render(request, "pagination_app/table.html", {"leads": leads})
     
-
-
-
 # ---------------------------------------------
 
-# def leads_by_name(request):
+def leads_list(request, pNum):
 
-#     leads = Lead.objects.filter(first_name__startswith=request.POST['name_starts_with'])
+    print('-"*30')
+    print(pNum)
 
-#     print("-"*30)
-#     print(leads)
+    leads_list = Lead.objects.all()
+    page = request.GET.get('page')
 
-#     return render(request, "pagination/table.html", {"leads":leads})
+    paginator = Paginator(leads_list,3)
+    leads=paginator.page(pNum)
 
-
-
-# ---------------------------------------------
-# def leads_by_page_num(request, page_num):
-# def leads_by_page_num(request):
-
-
-#     leads = Lead.objects.filter(page_num = request.POST['page_num'])
-#     print("="*30)
-#     print(request.POST['page_num'])
-#     print(leads)
-
-
-    
-#     return render(request, 'ajax_pagination/table.html', {'leads': leads})
-
-
-# ---------------------------------------------
-# def leads_by_page_num(request):
-
-#     all_leads = Lead.objects.all()
-#     pages = Paginator(all_leads, 2)
-#     leads_by_page = pages.page(1)
-
-#     return render(request, "ajax_pagination/table_copy.html", {"leads": all_leads})
+    return render(request, 'pagination_app/table.html', {'leads': leads })
 

@@ -147,3 +147,47 @@ end_time = challenge.datetime_end.replace(tzinfo=utc)
                     {% endif %}
                 </ul>
                 {% endif %}
+
+                --------------------------------------------------------
+
+==========================================
+
+def index(request):
+
+    leads_list = Lead.objects.all()
+    page = request.GET.get('page', 1)
+
+    paginator = Paginator(leads_list,3)
+    # leads=paginator.page(1)
+
+    page = request.GET.get('page')
+    try:
+        leads = paginator.page(page)
+    except PageNotAnInteger:
+        leads = paginator.page(1)
+    except EmptyPage:
+        leads = paginator.page(paginator.num_pages)
+
+    return render(request, 'pagination_app/index.html', {'leads':leads})
+
+
+
+
+    ---------------------------------
+    <div class="pagination">
+                    <span class="step-links">
+
+                        {% if leads.has_previous %}
+                        <a href="?page={{leads.previous_page_number}}">previous</a>
+                        {% endif %}
+
+                        <span class="current">
+                            Page {{leads.number}} of {{leads.paginator.num_pages}}.
+                        </span>
+
+                        {% if leads.has_next %}
+                        <a href="?page={{leads.next_page_number}}">next</a>
+                        {% endif %}
+                    </span>
+
+                </div>
