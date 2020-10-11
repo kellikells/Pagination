@@ -11,14 +11,11 @@ class Lead(models.Model):
     first_name = models.CharField(max_length = 255)
     last_name = models.CharField(max_length = 255)
     email = models.CharField(max_length = 255)
-    # page_num = models.IntegerField()
-    # page_num = models.CharField(max_length= 10)
+
     created_at = models.DateTimeField(auto_now_add = True)
     updated_at = models.DateTimeField(auto_now = True)
 
     # def dates_between(self, date_from, date_to):
-
-
 
     def __str__(self):
         return('first_name= ' + self.first_name)

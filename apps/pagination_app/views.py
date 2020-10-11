@@ -84,7 +84,7 @@ def leads_info(request):
         return render(request, "pagination_app/table.html", {"leads": leads})
     
 # ---------------------------------------------
-
+# used for page number click function
 def leads_list(request, pNum):
 
     print('-"*30')

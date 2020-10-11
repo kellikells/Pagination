@@ -36,9 +36,7 @@
                         <label for='name'>Name</label>
                     </div>
                     <div class='col-8'>
-
                         <input type='text' name='name'>
-
                     </div>
                 </div>
             </div>
@@ -48,17 +46,13 @@
                         <label for='start_date'>Date From:</label>
                     </div>
                     <div class='col-5'>
-
                         <input type='text' name='date_from' id='date_from'>
-
                     </div>
                     <div class='col-1'>
                         <label for='end_date'>Date To:</label>
                     </div>
                     <div class='col-5'>
-
                         <input type='text' name='date_to' id='date_to'>
-
                     </div>
                 </div>
             </div>
@@ -66,8 +60,10 @@
         <div class='row justify-content-end' style='padding: 20px 50px 0 10px; display:flex; justify-content: end;'>
 
             <div class="row" id='page_num_placeholder'>
-                <!-- 
-            <input type='hidden' name='page_number' value='1'>
+
+
+                
+            <!-- <input type='hidden' name='page_number' value='1'>
             <a href="#" data-value='1'>Page 1</a> <a href="#" data-value='1'>Page 2</a> -->
                 {% if leads.has_other_pages %}
                 <ul class="pagination">
@@ -77,8 +73,7 @@
                     <li class="active"><span>{{ i }} <span class="sr-only">(current)</span></span></li>
                     {% else %}
 
-                    <li><a class="the_pages" href="?page={{ i }}">{{ i }}
-
+                    <li><a class="the_pages" href="?page={{ i }}" data-value="{{i}}">{{ i }}
                             <!-- using hidden input with value of page number to submit to submitAjaxForm() -->
                             <input type="hidden" name="page_number" value="{{i}}">
                         </a></li>
@@ -88,8 +83,6 @@
 
                 </ul>
                 {% endif %}
-
-
             </div>
         </div>
     </form>
@@ -123,6 +116,13 @@
             });
         }
 
+
+        // name input
+        $('input[name=name]').keyup(function () {
+            submitAjaxform();
+        });
+
+
         // timer for dateinput delay 
         function delay(callback, ms) {
             var timer = 0;
@@ -135,47 +135,20 @@
             };
         }
 
-        // name input
-        $('input[name=name]').keyup(function () {
-            submitAjaxform();
-        });
-
         // dates input
         $('input[name=date_from], input[name=date_to]').keyup(delay(function (e) {
             submitAjaxform();
         }, 1500));
 
 
-
-
-        function getresult() {
-            $.ajax({
-                method: 'get',
-                url: '/pagination/leads_list/',
-                data: $('#paginationForm').val(),
-                success: function (data) {
-                    $('#table_placeholder').html(data)
-                }
-            })
-        }
-        // $(document).ready(function () {
-        //     $.ajax({
-        //         url: '/pagination/on_load/',
-        //         success: function (serverResponse) {
-        //             $('#table_placeholder').html(serverResponse)
-        //         }
-        //     });
-        // })
         // page input
         $('.the_pages').click(function (e) {
             e.preventDefault() // prevent it from going to link
 
-
-            // get only number from the href 
+            // regex: get only number from the href 
             var matches = ($(this).attr('href')).match(/(\d+)/);
 
             pNum = matches[0]
-
 
             console.log('page-num clicked')
             console.log(pNum)
@@ -188,21 +161,21 @@
                     $('#table_placeholder').html(data)
                 }
             })
-
         })
 
+
+
+        // < input type = 'hidden' name = 'page_number' value = '1' >
+        //     <a href="#" data-value='1'>Page 1</a> 
+        // <a href="#" data-value='1'>Page 2</a>
+
+
+        // $('a').click(function () {
+        //     $('input[name=page_number]').val($(this).attr('data-value'));
+        //     submitAjaxForm();
+        //     return false;  //do this so that it actually doesn't go to that link
+
     </script>
-
-
-    <!-- // $('a').click(function () {
-        //         $('input[name=page_number]').val($(this).attr('data-value'));
-        //         submitAjaxForm();
-        //         return false;  //do this so that it actually doesn't go to that link
-        //     } -->
-
-
-
-
 
     <!-- BOOTSTRAP'S: Optional JavaScript
     jQuery first, then Popper.js, then Bootstrap JS -->
